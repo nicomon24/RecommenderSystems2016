@@ -1,0 +1,73 @@
+NOTES:
+
+MAX TS: 1447023571 (Sun, 08 Nov 2015 22:59:31 GMT)
+MIN TS: 1440021654 (Wed, 19 Aug 2015 22:00:54 GMT)
+
+PIVOT TS: 1446249600 (Sat, 31 Oct 2015 00:00:00 GMT)
+
+TOPPOP score: 0.0102223778089 (REAL: 0.00164)
+
+COLLABORATIVE BASE: 0.0306636327265
+COLLABORATIVE IDF NICO: 0.0381713564935
+SLIDEM INIT: 0.035408303883
+SLIDEM PLUS: 0.0327338245427
+
+
+COLLAB NO TOPPOP: 0.0260727145429
+COLLAB NO TOPPOP TFIDF 0.0340687026294
+COLLAB TOPOP TFIDF 0.0386596208131
+
+Extracted 5000
+Train set size: 473080
+Test set size: 73784
+
+COLLAB IDF VERA 0.0407592629637
+COLLAB IDF VERA + count*conf 0.0394821742126
+COLLAB IDF VER + count+conf 0.0409709719722
+
+MEANS
+  ITEM-ITEM COLLAB => MEAN 1.504
+  64390.0918443
+  42805
+
+
+---------------------- SUBMISSION -----------------------
+item_clean.py => 1433
+    LAST_INTERACTION_DAYS = 13
+    #Confidence
+    CONFIDENCE_WEIGHTS = [3.75, 1.0, 1.25, 1.5]
+    #Content
+    CONTENT_SIMILARITY_THRESHOLD = 0.08
+    USER_SIMILARITY_MAGIC = [0,1.5,0.85,0.8,0.6,0.7,1,0.4,0.6,0,1,1]
+    #Collaborative
+    MIN_INTERACTION_FOR_COLLABORATIVE = 1
+    SIMILARITY_MIN_ITEM1 = 1
+    SIMILARITY_MIN_ITEM2 = 6
+    SIMILARITY_CONFIDENCE_AMPLIFIER = 3
+    SIMILARITY_SHRINK = 10
+    COLLABORATIVE_CONFIDENCE_SCORE_BOOST = 2
+    COLLABORATIVE_SCORE_SHRINK = 2
+
+item_clean.py with tags and titles
+    LAST_INTERACTION_DAYS = 14
+    TAGS_WEIGHT = 0.1
+    TITLE_WEIGHT = 0.1
+    OTHER AS BEFORE
+
+
+------------------- QUERIES -------------------------
+SPATIAL ANALYSIS
+
+SELECT userid, avg(lat), avg(lng) FROM item as i, interaction as v WHERE v.itemid = i.id GROUP BY userid;
+SELECT * FROM item as i, interaction as v WHERE v.itemid = i.id AND v.userid=1891243;
+
+1891243 |  46.7076920729417 |     -7.27692266610953
+
+-------------------- OTHER ------------------------
+TAB with git pull is WITH titles and tags (left tab)    0.0448819208286
+
+1: *usim            0.0443728190082
+2: senza usim
+
+SELECT count(*) FROM (SELECT u.* AS c FROM users as u LEFT JOIN interaction as i ON u.id = i.userid GROUP BY u.id HAVING COUNT(i.userid) < 2) AS x WHERE discipline!=0 OR industry!=0;
+SELECT count(*) FROM (select distinct u.id from users as u, interaction as x, item as i where u.id=x.userid and i.id=x.itemid and u.discipline != 0 and i.discipline != 0 and u.discipline != i.discipline) AS x;
